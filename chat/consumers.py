@@ -10,7 +10,10 @@ from .models import Message
 class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):
-        pass
+        messages = Message.last_30_messages()
+        content = {
+            'messages': self.messages_to_json(messages)
+        }
 
     def new_message(self, data):
         pass
