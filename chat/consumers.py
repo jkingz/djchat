@@ -14,6 +14,7 @@ class ChatConsumer(WebsocketConsumer):
         content = {
             'messages': self.messages_to_json(messages)
         }
+        self.send_message(content)
 
     def new_message(self, data):
         pass
@@ -60,7 +61,7 @@ class ChatConsumer(WebsocketConsumer):
         data = json.loads(text_data)
         self.commands[data['command']](self, data)
 
-    def send_message(self, message):
+    def send_chat_message(self, message):
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
@@ -71,14 +72,15 @@ class ChatConsumer(WebsocketConsumer):
             }
         )
 
+    def send_message(self, message):
+        self.send(text_data=json.dumps((message)))
+
     # Receive message from room group
     def chat_message(self, event):
         message = event['message']
 
         # Send message to WebSocket
-        self.send(text_data=json.dumps({
-            'message': message
-        }))
+        self.send(text_data=json.dumps((message)))
 
 
 # class ChatConsumer(AsyncWebsocketConsumer):
