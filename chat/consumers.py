@@ -18,6 +18,12 @@ class ChatConsumer(WebsocketConsumer):
     def new_message(self, data):
         pass
 
+    def messages_to_json(self, messages):
+        result = []
+        for message in messages:
+            result.append(self.messages_to_json(message))
+        return result
+
     commands = {
         'fetch_messages': fetch_messages,
         'new_message': new_message
